@@ -33,13 +33,14 @@ cd backend
 
 npm install
     3.Folder structure
-    backend/
-            │── node_modules/      # Installed dependencies
-            │── .env               # Environment variables (MongoDB URI)
-            │── index.js           # Main entry point (Express server)
-            │── package.json       # Project dependencies
-            │── models/
-            │   ├── Item.js        # Mongoose schema/model
+                    backend/
+                    │── node_modules/     
+                    │── .env               
+                    │── index.js          
+                    │── package.json     
+                    │── models/
+                    │   ├── Item.js       
+   
 
 
 	4.	Start the Backend Server
@@ -60,18 +61,14 @@ npm install
     3. set folder structure
 
                     react-app/
-                │── public/                  # Static assets
-                │   ├── index.html           # Main HTML file
-                │── src/                     # Source code
-                │   ├── components/          # Reusable UI components
-                │   │   ├── ItemList.js      # Displays items
-                │   │   ├── SearchBar.js     # Search input field
-                │   ├── App.js               # Main app component
-                │   ├── index.js             # Entry point
-                │   ├── styles.css           # Global styles
-                │── package.json             # Project dependencies
-                │── README.md                # Documentation
-             
+                │── public/                 
+                │   ├── index.html         
+                │── src/                     
+                │   ├── App.js              
+                │   ├── index.js            
+                │   ├── styles.css           
+                │── package.json             
+                │── README.md               
 
 	3.	Start the React App
 
