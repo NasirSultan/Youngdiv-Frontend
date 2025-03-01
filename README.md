@@ -32,6 +32,9 @@ cd backend
 	2.	Install Dependencies
 
 npm install
+
+
+
     3.Folder structure
                     backend/
                     │── node_modules/     
