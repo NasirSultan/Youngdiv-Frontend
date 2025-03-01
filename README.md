@@ -50,10 +50,13 @@ npm install
     node index.js
 
 API Endpoint:
+
 	•	Base URL: http://localhost:5000
+
 	•	Fetch Items API: http://localhost:5000/api/items?page=${page}&search=${search}
 
 Frontend Setup
+
 	1.	Navigate to the frontend folder
 
 cd Youngdiv
@@ -61,6 +64,7 @@ cd Youngdiv
 	2.	Install Dependencies
 
 npm install
+
     3. set folder structure
 
                     react-app/
