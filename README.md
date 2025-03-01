@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+Full-Stack Data Fetching with Pagination and Filtering in React and Node.js
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple full-stack application with a React frontend and Node.js (Express) backend that fetches and displays paginated data from MongoDB Atlas with search functionality.
 
-## Available Scripts
+Features
+	•	Fetch data from the backend API
+	•	Search functionality to filter results
+	•	Pagination with automatic reset after page 3
+	•	Styled UI using Bootstrap with hover effects
+	•	Backend API using Express.js and MongoDB
 
-In the project directory, you can run:
+Tech Stack
 
-### `npm start`
+Frontend:
+	•	React.js (JavaScript Framework)
+	•	Bootstrap (For UI Styling)
+	•	Fetch API (To communicate with the backend)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Backend:
+	•	Node.js + Express.js (For REST API)
+	•	MongoDB Atlas (Cloud Database)
+	•	Mongoose (MongoDB ODM for Node.js)
+	•	CORS & dotenv (For API security & environment variables)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Getting Started
 
-### `npm test`
+Backend Setup
+	1.	Navigate to the backend folder
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+cd backend
 
-### `npm run build`
+	2.	Install Dependencies
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+npm install
+    3.Folder structure
+    backend/
+            │── node_modules/      # Installed dependencies
+            │── .env               # Environment variables (MongoDB URI)
+            │── index.js           # Main entry point (Express server)
+            │── package.json       # Project dependencies
+            │── models/
+            │   ├── Item.js        # Mongoose schema/model
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+	4.	Start the Backend Server
+    node index.js
 
-### `npm run eject`
+API Endpoint:
+	•	Base URL: http://localhost:5000
+	•	Fetch Items API: http://localhost:5000/api/items?page=${page}&search=${search}
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend Setup
+	1.	Navigate to the frontend folder
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+cd Youngdiv
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+	2.	Install Dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+npm install
+    3. set folder structure
 
-## Learn More
+                    react-app/
+                │── public/                  # Static assets
+                │   ├── index.html           # Main HTML file
+                │── src/                     # Source code
+                │   ├── components/          # Reusable UI components
+                │   │   ├── ItemList.js      # Displays items
+                │   │   ├── SearchBar.js     # Search input field
+                │   ├── App.js               # Main app component
+                │   ├── index.js             # Entry point
+                │   ├── styles.css           # Global styles
+                │── package.json             # Project dependencies
+                │── README.md                # Documentation
+             
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+	3.	Start the React App
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+npm run start
 
-### Code Splitting
+The app will open at http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Fetching Data from API
 
-### Analyzing the Bundle Size
+	•	Fetch Items API: http://localhost:5000/api/items?page=${page}&search=${search}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The React frontend fetches paginated and searchable data from the backend API. The data is displayed in a clean and responsive UI with Bootstrap styling. If the user reaches page 3, the pagination resets to page 1 automatically.
 
-### Making a Progressive Web App
+Demo Video
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Watch the Demo (Replace # with the actual link after recording)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
