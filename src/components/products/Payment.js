@@ -42,7 +42,7 @@ const TotalPricePieChart = () => {
           return acc;
         }, 0);
 
-        const net =addTotal- deleteTotal ;
+        const net =  addTotal - deleteTotal ;
 
         setAddTotalPrice(addTotal);
         setDeleteTotalPrice(deleteTotal);

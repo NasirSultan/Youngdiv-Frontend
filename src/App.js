@@ -17,7 +17,7 @@ import AddProductAdmin from './components/products/AddProductAdmin';
 import UserProducts from './components/products/UserProducts';
 import Payment from './components/products/Payment';
 import UserHistory from './components/products/UserHistory';
-
+import PaymentSeven from './components/products/PaymentSeven';
 function App() {
   return (
    
@@ -39,6 +39,7 @@ function App() {
           <Route path="/admin/user-history" element={<UserHistory />} />
           <Route path="/Payment" element={<Payment />} />
           <Route path="/Bottombar" element={<Bottombar />} />
+          <Route path="/PaymentSeven" element={<PaymentSeven />} />
         </Route>
 
         {/* Not Found page */}

@@ -218,3 +218,25 @@ span {
 button:focus {
   outline: none;
 }
+/* Mobile first: stack cards vertically */
+@media (max-width: 576px) {
+  .card {
+    margin-bottom: 15px;
+  }
+
+  .card h5 {
+    font-size: 1.2rem;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+  }
+}
+
+/* On larger screens (>= 768px), cards appear in a row */
+@media (min-width: 768px) {
+  .card {
+    display: flex;
+    justify-content: space-between;
+  }
+}
