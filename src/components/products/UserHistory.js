@@ -16,7 +16,11 @@ const ProductHistory = () => {
 
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
-    return date.toLocaleString();
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }); // Example: Apr 19, 2025
   };
 
   const fetchLogs = async () => {
@@ -52,7 +56,7 @@ const ProductHistory = () => {
       });
 
       const historyArr = Object.entries(grouped).map(([productId, entry]) => {
-        const total = entry.productSnapshot?.price || 0; // Changed to sum only individual item price
+        const total = entry.productSnapshot?.price || 0;
         return {
           productId,
           name: entry.productSnapshot?.name || 'Unknown',
@@ -92,14 +96,14 @@ const ProductHistory = () => {
   if (error) return <p className="text-center mt-5 text-danger">{error}</p>;
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mt-5 pt-4">
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <h3 className="fw-bold mb-2 mb-md-0">Product History</h3>
+        <h3 className="fw-bold mb-2 mb-md-0">Items History</h3>
         <div>
           <button className="btn btn-outline-success btn-sm me-2" onClick={() => setShowModal(true)}>
             Check Total Amount
           </button>
-          <button className="btn btn-outline-dark btn-sm" onClick={() => navigate('/getproduct')}>
+          <button className="btn btn-outline-dark btn-sm" onClick={() => navigate('/userslist')}>
             Back to Products list
           </button>
         </div>
@@ -110,7 +114,7 @@ const ProductHistory = () => {
       ) : (
         <div className="table-responsive d-none d-md-block">
           <div className="d-flex fw-semibold text-muted border-bottom bg-light p-2">
-            <div className="col-2 border-end">Product</div>
+            <div className="col-2 border-end">Item</div>
             <div className="col-2 border-end">Price</div>
             <div className="col-3 border-end">Add Date</div>
             <div className="col-3 border-end">Delete Date</div>
@@ -121,7 +125,6 @@ const ProductHistory = () => {
             <div key={item.productId} className="d-flex align-items-center border rounded p-2 mb-2 history-card xm-2">
               <div className="col-2 border-end">{item.name}</div>
               <div className="col-2 border-end">₹{item.price}</div>
-
               <div className="col-3 border-end">{item.addDate ? formatDate(item.addDate) : '—'}</div>
               <div className="col-3 border-end">
                 {item.deleteDate ? formatDate(item.deleteDate) : (
@@ -140,7 +143,7 @@ const ProductHistory = () => {
         </div>
       )}
 
-      {/* Mobile card layout */}
+      {/* Mobile Card Layout */}
       <div className="d-block d-md-none">
         {historyList.map((item) => (
           <div key={item.productId} className="card mb-3 shadow-sm p-2 rounded-4 border-0 bg-light history-card xm-2">
@@ -153,14 +156,12 @@ const ProductHistory = () => {
               </div>
 
               <div className="d-flex justify-content-between mb-2">
-                <span className="text-muted">Add </span>
-                <span className="text-secondary small">
-                  {item.addDate ? formatDate(item.addDate) : '—'}
-                </span>
+                <span className="text-muted">Add</span>
+                <span className="text-secondary small">{item.addDate ? formatDate(item.addDate) : '—'}</span>
               </div>
 
               <div className="d-flex justify-content-between mb-2">
-                <span className="text-muted">Delete </span>
+                <span className="text-muted">Delete</span>
                 <span className="text-secondary small">
                   {item.deleteDate ? formatDate(item.deleteDate) : (
                     <span className="text-success">Not Deleted</span>
@@ -181,7 +182,7 @@ const ProductHistory = () => {
         ))}
       </div>
 
-      {/* Modal for total amount */}
+      {/* Modal for Total Amount */}
       {showModal && (
         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -203,7 +204,7 @@ const ProductHistory = () => {
         </div>
       )}
 
-      {/* Hover styling */}
+      {/* Hover Styling */}
       <style jsx="true">{`
         .history-card {
           transition: transform 0.2s ease, box-shadow 0.3s ease;

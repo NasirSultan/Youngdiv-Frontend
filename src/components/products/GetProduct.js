@@ -7,6 +7,7 @@ const GetProduct = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showTotal, setShowTotal] = useState(false);
+  const [hoveredProductId, setHoveredProductId] = useState(null); // To track hover state
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
@@ -25,40 +26,34 @@ const GetProduct = () => {
     }
   };
 
-  const handleDelete = async (productId) => {
-    const confirm = window.confirm('Are you sure you want to delete this product?');
-    if (!confirm) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/products/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchProducts(); // Refresh data
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      alert('Failed to delete product');
-    }
-  };
-
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  const formatDate = (date) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(date).toLocaleDateString(undefined, options);
+  };
+
+  const formatPriceInINR = (price) => {
+    // Format the price to show in INR with two decimal places
+    return `₹${price.toFixed(2)}`;
+  };
+
   if (loading) return <p className="text-center mt-5">Loading...</p>;
 
+  // Sort products by `createdAt` in descending order
+  const sortedProducts = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   return (
-    <div className="container mt-5">
+    <div className="container bg-light  rounded shadow-sm mt-5 pt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="fw-bold">My Products</h3>
+        <h3 className="fw-bold">Items</h3>
         <div>
-        <button
-    className="btn btn-outline-dark btn-sm"
-    onClick={() => navigate('/ProductHistory')}
-  >
-    View Add/Delete History
-  </button>
-  <button className="btn btn-outline-dark btn-sm mx-2"     onClick={() => navigate('/user')}>
+          <button
+            className="btn btn-outline-dark btn-sm d-none d-md-inline"
+            onClick={() => navigate('/user')}
+          >
             Back to Dashboard
           </button>
         </div>
@@ -66,48 +61,40 @@ const GetProduct = () => {
 
       {showTotal ? (
         <div className="text-center mt-4">
-          
           <div className="card shadow-sm p-4 mx-auto" style={{ maxWidth: '300px' }}>
             <h5>Total Amount of All Products</h5>
-            <p className="h4 text-success">${totalAmount}</p>
+            <p className="h4 text-success">{formatPriceInINR(totalAmount)}</p>
             <button className="btn btn-secondary btn-sm mt-3" onClick={() => setShowTotal(false)}>
               Back to Products
             </button>
-        
-        
-        
           </div>
-        
-          
         </div>
       ) : products.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <div className="border rounded">
+        <div>
           {/* Header Row */}
-          <div className="d-flex fw-semibold text-muted border-bottom bg-light p-2">
-            <div className="col-3 border-end">Product</div>
-            <div className="col-2 border-end">Price</div>
-            <div className="col-2 border-end">Quantity</div>
-            <div className="col-2 border-end">Total</div>
-            <div className="col-2 ">Action</div>
+          <div className="d-flex fw-semibold text-muted bg-white p-2 border-bottom mb-2">
+            <div className="col-4">Name</div>
+            <div className="col-4">Price</div>
+            <div className="col-4 text-center">Date </div>
           </div>
 
           {/* Product Rows */}
-          {products.map((product) => (
-            <div key={product._id} className="d-flex align-items-center border-bottom p-2">
-              <div className="col-3 border-end">{product.name}</div>
-              <div className="col-2 border-end">${product.price}</div>
-              <div className="col-2 border-end">{product.quantity}</div>
-              <div className="col-2 border-end">${product.price * product.quantity}</div>
-              <div className="col-3  text-center">
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(product._id)}
-                >
-                  Delete
-                </button>
-              </div>
+          {sortedProducts.map((product) => (
+            <div
+              key={product._id}
+              className="d-flex align-items-center p-2 mb-2 rounded"
+              style={{
+                backgroundColor: hoveredProductId === product._id ? '#c8e6c9' : '#e3f2fd', // Change color on hover
+                cursor: 'pointer', // Show pointer cursor on hover
+              }}
+              onMouseEnter={() => setHoveredProductId(product._id)} // Set hover state
+              onMouseLeave={() => setHoveredProductId(null)} // Reset hover state
+            >
+              <div className="col-4">{product.name}</div>
+              <div className="col-4">{formatPriceInINR(product.price)}</div> {/* Display price in INR */}
+              <div className="col-4 text-center">{formatDate(product.createdAt)}</div>
             </div>
           ))}
         </div>

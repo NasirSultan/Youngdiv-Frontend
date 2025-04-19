@@ -9,8 +9,7 @@ const AddProductAdmin = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    price: '',
-    quantity: ''
+    price: ''
   });
 
   const [error, setError] = useState('');
@@ -30,9 +29,9 @@ const AddProductAdmin = () => {
     setError('');
     setSuccess('');
 
-    const { name, price, quantity } = formData;
+    const { name, price } = formData;
 
-    if (!name || !price || !quantity) {
+    if (!name || !price) {
       setError('Please fill all fields.');
       return;
     }
@@ -41,7 +40,7 @@ const AddProductAdmin = () => {
       const res = await axios.post('http://localhost:5000/api/products/admin', {
         name,
         price,
-        quantity,
+        quantity: 1,
         user: user._id
       }, {
         headers: {
@@ -50,7 +49,7 @@ const AddProductAdmin = () => {
       });
 
       setSuccess('Product added successfully!');
-      setFormData({ name: '', price: '', quantity: '' });
+      setFormData({ name: '', price: '' });
 
     } catch (err) {
       console.error(err);
@@ -59,57 +58,58 @@ const AddProductAdmin = () => {
   };
 
   return (
-    <div className="container my-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="text-primary">Add Product for {user.username}</h3>
-        <button className="btn btn-outline-secondary" onClick={() => navigate('/admin')}>
-          ← Back to User List
-        </button>
+    <div className="container my-4 mt-5 pt-4">
+      <div className="row">
+        <div className="col-12 col-md-10 col-lg-8 mx-auto">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+            <h4 className="text-primary fw-bold mb-2 mb-md-0">
+              Add Item for {user.username}
+            </h4>
+            <button 
+              className="btn btn-outline-secondary"
+              onClick={() => navigate('/userslist')}
+            >
+              ← Back to User List
+            </button>
+          </div>
+
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
+
+          <form onSubmit={handleSubmit} className="card p-4 shadow-sm bg-light border-0">
+            <div className="mb-3">
+              <label className="form-label fw-semibold">item Name</label>
+              <input
+                type="text"
+                name="name"
+                className="form-control"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter product name"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label fw-semibold">Price</label>
+              <input
+                type="number"
+                name="price"
+                className="form-control"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder="Enter price"
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn btn-success w-100 fw-semibold"
+            >
+              Add Item
+            </button>
+          </form>
+        </div>
       </div>
-
-      {/* Alerts */}
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-
-      <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
-        <div className="mb-3">
-          <label className="form-label">Product Name</label>
-          <input
-            type="text"
-            name="name"
-            className="form-control"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter product name"
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Price</label>
-          <input
-            type="number"
-            name="price"
-            className="form-control"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Enter price"
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Quantity</label>
-          <input
-            type="number"
-            name="quantity"
-            className="form-control"
-            value={formData.quantity}
-            onChange={handleChange}
-            placeholder="Enter quantity"
-          />
-        </div>
-
-        <button type="submit" className="btn btn-success w-100">Add Product</button>
-      </form>
     </div>
   );
 };

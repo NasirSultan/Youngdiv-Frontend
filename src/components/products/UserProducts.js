@@ -34,7 +34,6 @@ const UserProducts = () => {
   };
 
   const handleDelete = async (productId) => {
-    // Show confirmation alert before deletion
     const isConfirmed = window.confirm('Are you sure you want to delete this product?');
     if (isConfirmed) {
       try {
@@ -53,13 +52,14 @@ const UserProducts = () => {
   };
 
   return (
-    <div className="container my-5">
-      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-        <h3 className="text-primary">User Product Details</h3>
-        <div className="d-flex gap-2 mt-3 mt-md-0">
-          <button className="btn btn-outline-success" onClick={() => setShowModal(true)}>Total Amount</button>
-          <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>← Back</button>
-        </div>
+    <div className="container my-5 pb-5 mt-5 pt-4">
+      <div className="d-flex flex-column mb-4">
+        <h3 className="text-primary d-flex align-items-center gap-2">
+          <i className="bi bi-box-seam-fill text-success"></i> 
+        Items  Detail
+        </h3>
+      
+        <div className="border-bottom border-success mt-2" style={{ width: '180px', height: '3px', borderRadius: '2px' }}></div>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -67,7 +67,7 @@ const UserProducts = () => {
       {products.length > 0 ? (
         <>
           {/* Header row for large screens */}
-          <div className="d-none d-lg-flex fw-bold border-bottom pb-2 mb-3">
+          <div className="d-none d-lg-flex fw-bold border-bottom pb-2 mb-3" style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div className="col-lg-4">Name</div>
             <div className="col-lg-4">Price</div>
             <div className="col-lg-4 text-center">Operation</div>
@@ -77,7 +77,16 @@ const UserProducts = () => {
           {products.map((prod) => (
             <div className="col-12 mb-3" key={prod._id}>
               {/* Large screen row */}
-              <div className="d-none d-lg-flex border rounded p-3 align-items-center">
+              <div
+                className="d-none d-lg-flex border rounded py-2 px-3 align-items-center bg-light product-row mx-auto shadow-sm"
+                style={{
+                  maxWidth: '800px',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  lineHeight: '1.2',
+                }}
+              >
                 <div className="col-lg-4">{prod.name}</div>
                 <div className="col-lg-4 text-success">₹{prod.price}</div>
                 <div className="col-lg-4 text-center">
@@ -87,8 +96,8 @@ const UserProducts = () => {
                 </div>
               </div>
 
-              {/* Small screen card with centered content */}
-              <div className="d-lg-none card shadow-sm mx-auto" style={{ maxWidth: '400px' }}>
+              {/* Small screen card */}
+              <div className="d-lg-none card shadow-sm bg-light mx-auto" style={{ maxWidth: '400px' }}>
                 <div className="card-body d-flex flex-column align-items-center justify-content-center">
                   <h5 className="mb-2 text-center">{prod.name}</h5>
                   <p className="text-success mb-2 text-center">₹{prod.price}</p>
@@ -125,6 +134,14 @@ const UserProducts = () => {
           </div>
         </div>
       )}
+      
+      {/* Additional Styling */}
+      <style>{`
+        .product-row:hover {
+          background-color: #e9f7ef;
+          transform: scale(1.01);
+        }
+      `}</style>
     </div>
   );
 };

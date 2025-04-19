@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Chart } from 'chart.js/auto';
+import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'; // Import Lucide icons
 
 const PricePerDayComponent = () => {
   const [priceData, setPriceData] = useState([]);
@@ -34,29 +35,51 @@ const PricePerDayComponent = () => {
           const date = new Date(log.timestamp);
           if (log.action === 'add') date.setDate(date.getDate() - 7);
           if (log.action === 'delete') date.setDate(date.getDate() - 1);
-          const adjustedDate = date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          });
 
-          if (!grouped[adjustedDate]) {
-            grouped[adjustedDate] = { add: 0, delete: 0 };
+          const dateStr = date.toISOString().split('T')[0]; // yyyy-mm-dd
+          if (!grouped[dateStr]) {
+            grouped[dateStr] = { add: 0, delete: 0 };
           }
 
-          if (log.action === 'add') grouped[adjustedDate].add += total;
-          if (log.action === 'delete') grouped[adjustedDate].delete += total;
+          if (log.action === 'add') grouped[dateStr].add += total;
+          if (log.action === 'delete') grouped[dateStr].delete += total;
         });
 
-        const priceArray = Object.keys(grouped).map(date => ({
-          date,
-          addTotal: grouped[date].add,
-          deleteTotal: grouped[date].delete,
-          netAmount:grouped[date].add- grouped[date].delete ,
-        }));
+        // Get this week's Monday to Saturday
+        const now = new Date();
+        const currentDay = now.getDay(); // 0 = Sunday
+        const monday = new Date(now);
+        monday.setDate(now.getDate() - ((currentDay + 6) % 7)); // Move to Monday
 
-        setPriceData(priceArray);
+        const weekDates = Array.from({ length: 6 }).map((_, i) => {
+          const d = new Date(monday);
+          d.setDate(monday.getDate() + i);
+          return d;
+        });
+
+        const priceArray = weekDates.map(date => {
+          const dateStr = date.toISOString().split('T')[0];
+          const display = `${date.toLocaleDateString('en-US', {
+            weekday: 'long',
+          })} - ${date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+          })}`;
+
+          const data = grouped[dateStr] || { add: 0, delete: 0 };
+          return {
+            date: display,
+            addTotal: data.add,
+            deleteTotal: data.delete,
+            netAmount: data.add - data.delete,
+            rawDate: dateStr, // Store raw date for sorting
+          };
+        });
+
+        // Sort priceArray by the most recent date first
+        const sortedData = priceArray.sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
+
+        setPriceData(sortedData);
       } catch (error) {
         console.error('Fetch error:', error);
       }
@@ -117,9 +140,13 @@ const PricePerDayComponent = () => {
     });
   }, [priceData]);
 
+  const getRowStyle = (date) => {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in yyyy-mm-dd format
+    return date === currentDate ? { backgroundColor: '#e3f2fd' } : {};
+  };
+
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', fontFamily: "'Roboto', sans-serif" }}>
-      {/* Improved Title Section */}
+    <div className='mt-5 pt-4 my-5 ' style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', fontFamily: "'Roboto', sans-serif" }}>
       <h2
         style={{
           textAlign: 'center',
@@ -129,15 +156,13 @@ const PricePerDayComponent = () => {
           marginBottom: '20px',
         }}
       >
-        Price Per Adjusted Day
+        Payment Analytics
       </h2>
 
-      {/* Responsive Chart */}
       <div style={{ position: 'relative', width: '100%', height: '400px', marginBottom: '30px' }}>
         <canvas ref={canvasRef}></canvas>
       </div>
 
-      {/* Mobile-friendly Card Layout with Iconography */}
       <div style={{ marginTop: '20px' }}>
         {priceData.map((item, idx) => (
           <div
@@ -146,16 +171,17 @@ const PricePerDayComponent = () => {
             style={{
               borderRadius: '12px',
               border: '1px solid #ddd',
-              padding: '20px',
+              padding: '7px',
               backgroundColor: '#fff',
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
               marginBottom: '30px',
+              ...getRowStyle(item.rawDate), // Apply style for today's row
             }}
           >
             <h5
               style={{
                 textAlign: 'center',
-                marginBottom: '15px',
+                marginBottom: '5px',
                 fontSize: '1.2rem',
                 fontWeight: '600',
                 color: '#333',
@@ -163,73 +189,50 @@ const PricePerDayComponent = () => {
             >
               {item.date}
             </h5>
-            <div className="row">
+            <div className="row" style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div className="col-12 col-md-4">
                 <div
-                  className="p-3"
+                  className="p-2"
                   style={{
                     backgroundColor: 'rgba(13, 110, 253, 0.1)',
                     borderRadius: '10px',
                     textAlign: 'center',
                     marginBottom: '15px',
-                    padding: '15px 0',
+                    padding: '10px 0',
                   }}
                 >
-                  <h6
-                    className="text-primary"
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: '600',
-                    }}
-                  >
-                    <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i> Add
-                  </h6>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>₹{item.addTotal.toFixed(2)}</p>
+                  <p style={{ fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <ArrowUpCircle style={{ marginRight: '8px', fontWeight: 'bold', color: '#0d6efd' }} /> ₹{item.addTotal.toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div className="col-12 col-md-4">
                 <div
-                  className="p-3"
+                  className="p-2"
                   style={{
                     backgroundColor: 'rgba(255, 232, 232, 0.7)',
                     borderRadius: '10px',
                     textAlign: 'center',
                     marginBottom: '15px',
-                    padding: '15px 0',
+                    padding: '10px 0',
                   }}
                 >
-                  <h6
-                    className="text-danger"
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: '600',
-                    }}
-                  >
-                    <i className="bi bi-dash-circle" style={{ marginRight: '8px' }}></i> Delete
-                  </h6>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>₹{item.deleteTotal.toFixed(2)}</p>
+                  <p style={{ fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <ArrowDownCircle style={{ marginRight: '8px', fontWeight: 'bold', color: '#dc3545' }} /> ₹{item.deleteTotal.toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div className="col-12 col-md-4">
                 <div
-                  className="p-3"
+                  className="p-2"
                   style={{
                     backgroundColor: 'rgba(232, 255, 232, 0.7)',
                     borderRadius: '10px',
                     textAlign: 'center',
                     marginBottom: '15px',
-                    padding: '15px 0',
+                    padding: '10px 0',
                   }}
                 >
-                  <h6
-                    className="text-success"
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: '600',
-                    }}
-                  >
-                    <i className="bi bi-currency-exchange" style={{ marginRight: '8px' }}></i> Net
-                  </h6>
                   <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>₹{item.netAmount.toFixed(2)}</p>
                 </div>
               </div>
@@ -238,7 +241,6 @@ const PricePerDayComponent = () => {
         ))}
       </div>
 
-      {/* Media Query for Mobile Devices */}
       <style jsx>{`
         @media (max-width: 576px) {
           h2 {
@@ -246,10 +248,6 @@ const PricePerDayComponent = () => {
             font-weight: 700;
           }
           h5 {
-            font-size: 1rem;
-            font-weight: 600;
-          }
-          h6 {
             font-size: 1rem;
             font-weight: 600;
           }

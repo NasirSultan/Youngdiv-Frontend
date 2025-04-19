@@ -1,58 +1,63 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaCreditCard, FaExclamationCircle, FaCog } from 'react-icons/fa'; // Example icons
+// BottomNav.jsx
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  FaTachometerAlt,
+  FaUsers,
+  FaCreditCard,
+  FaCog,
+  FaBoxOpen,
+  FaHistory,
+  FaUserCircle,
+} from 'react-icons/fa';
 
 const BottomNav = () => {
-  const [activeTab, setActiveTab] = useState('/dashboard'); // Track active tab
+  const [activeTab, setActiveTab] = useState('');
+  const [role, setRole] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem('role'); // 'admin' or 'user'
+    if (storedRole) {
+      setRole(storedRole);
+    }
+    setActiveTab(location.pathname);
+  }, [location]);
+
+  const adminTabs = [
+    { path: '/payment', label: 'Dashboard', icon: <FaTachometerAlt />, value: '/admin' },
+    { path: '/userslist', label: 'Users', icon: <FaUsers />, value: '/userslist' },
+    { path: '/PaymentSeven', label: 'Analytics', icon: <FaCreditCard />, value: '/admin/user-history' },
+    { path: '/settings', label: 'Settings', icon: <FaCog />, value: '/settings' },
+  ];
+
+  const userTabs = [
+    { path: '/user', label: 'Dashboard', icon: <FaTachometerAlt />, value: '/user' },
+    { path: '/getproduct', label: 'Items', icon: <FaBoxOpen />, value: '/getproduct' },
+    { path: '/ProductHistory', label: 'History', icon: <FaHistory />, value: '/user/history' },
+    { path: '/profile', label: 'Profile', icon: <FaUserCircle />, value: '/profile' },
+  ];
+
+  const tabs = role === 'admin' ? adminTabs : userTabs;
 
   return (
-    <div className="bottom-nav">
-      <Link to="/admin" className="nav-item">
-        <button
-          className={activeTab === '/dashboard' ? 'active' : ''}
-          onClick={() => setActiveTab('/dashboard')}
-        >
-          <FaTachometerAlt className="icon" />
-          <span>Dashboard</span>
-        </button>
-      </Link>
-      <Link to="/userslist" className="nav-item">
-        <button
-          className={activeTab === '/users' ? 'active' : ''}
-          onClick={() => setActiveTab('/users')}
-        >
-          <FaUsers className="icon" />
-          <span>Users</span>
-        </button>
-      </Link>
-      <Link to="/admin/user-history" className="nav-item">
-        <button
-          className={activeTab === '/payments' ? 'active' : ''}
-          onClick={() => setActiveTab('/payments')}
-        >
-          <FaCreditCard className="icon" />
-          <span>Payments</span>
-        </button>
-      </Link>
-      <Link to="/reports" className="nav-item">
-        <button
-          className={activeTab === '/reports' ? 'active' : ''}
-          onClick={() => setActiveTab('/reports')}
-        >
-          <FaExclamationCircle className="icon" />
-          <span>Reports</span>
-        </button>
-      </Link>
-      <Link to="/settings" className="nav-item">
-        <button
-          className={activeTab === '/settings' ? 'active' : ''}
-          onClick={() => setActiveTab('/settings')}
-        >
-          <FaCog className="icon" />
-          <span>Settings</span>
-        </button>
-      </Link>
-    </div>
+    <>
+      {role && (
+        <div className={`bottom-nav ${role}`}>
+          {tabs.map((tab) => (
+            <Link to={tab.path} className="nav-item" key={tab.value}>
+              <button
+                className={`nav-btn ${activeTab === tab.value ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.value)}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 

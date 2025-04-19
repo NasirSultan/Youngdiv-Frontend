@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const AddProduct = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [quantity, setQuantity] = useState('');
   const [alert, setAlert] = useState({ message: '', type: '' });
 
   const navigate = useNavigate();
@@ -13,21 +12,21 @@ const AddProduct = () => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
 
-    if (!name || !price || !quantity) {
+    if (!name || !price) {
       setAlert({ message: 'Please fill in all fields.', type: 'error' });
       return;
     }
 
     const parsedPrice = parseFloat(price);
-    const parsedQuantity = parseInt(quantity);
-    const totalAmount = parsedPrice * parsedQuantity;
+    const quantity = 1; // Default quantity
+    const totalAmount = parsedPrice * quantity;
 
     try {
       const token = localStorage.getItem('token');
 
       const response = await axios.post(
         'http://localhost:5000/api/products',
-        { name, price: parsedPrice, quantity: parsedQuantity },
+        { name, price: parsedPrice, quantity },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -41,7 +40,6 @@ const AddProduct = () => {
       // Clear input fields
       setName('');
       setPrice('');
-      setQuantity('');
     } catch (err) {
       console.error(err);
       setAlert({ message: 'Failed to add product. Please try again.', type: 'error' });
@@ -94,20 +92,6 @@ const AddProduct = () => {
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     placeholder="e.g. 999"
-                    required
-                    min="1"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="quantity" className="form-label">Quantity</label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    className="form-control"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    placeholder="e.g. 2"
                     required
                     min="1"
                   />

@@ -240,3 +240,173 @@ button:focus {
     justify-content: space-between;
   }
 }
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.nav-item button {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-item button.active {
+  color: #007bff;
+  font-weight: bold;
+  background: none; /* Ensure no background when active */
+  border: none; /* No border when active */
+}
+
+.nav-item button.focused {
+  outline: none;
+/* Add border only when focused */
+  background-color: #f0f8ff;
+}
+
+.nav-item button:hover {
+  color: #007bff;
+}
+
+.nav-item button span {
+  margin-top: 5px;
+}
+
+.icon {
+  font-size: 20px;
+}
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.nav-item button {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 10px;  /* Further decreased padding for smaller buttons */
+  font-size: 12px;     /* Decreased font size */
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 50px;         /* Decreased button width */
+  height: 40px;        /* Further decreased button height */
+}
+
+.nav-item button.active {
+  color: #007bff;
+  font-weight: bold;
+  background: none; /* Ensure no background when active */
+  border: none; /* No border when active */
+}
+
+.nav-item button.focused {
+  outline: none;
+   /* Add border only when focused */
+  background-color: #f0f8ff;
+}
+
+.nav-item button:hover {
+  color: #007bff;
+}
+
+.nav-item button span {
+  margin-top: 3px;  /* Adjusted margin to fit the smaller button */
+}
+
+.icon {
+  font-size: 16px;  /* Decreased icon size */
+}
+/* Body and general styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.user-dashboard-content {
+  flex: 1;
+  padding-bottom: 50px; /* Prevent content from being hidden behind the fixed bottom nav */
+  overflow-y: auto;     /* Allow vertical scrolling */
+  height: calc(100vh - 50px); /* Ensure the content area takes full height minus the nav height */
+  padding: 20px;
+}
+
+/* Bottom nav styling (fixed at the bottom) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: 14px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.bottom-nav .active {
+  color: #4CAF50; /* Active color (green) */
+}
+
+.bottom-nav .focused {
+  transform: scale(1.1);
+  color: #4CAF50; /* Focused color */
+}
+
+.bottom-nav button span {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.nav-item {
+  display: inline-block;
+  width: 25%;
+}
+
+.bottom-nav.user {
+  background-color: #f4f4f4; /* Example for user role */
+}
+
+.bottom-nav.admin {
+  background-color: #e0e0e0; /* Example for admin role */
+}
+/* App.css */
+
